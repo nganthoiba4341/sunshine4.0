@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Sunshine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #ffe6ea, #ffccd5);
+        font-family: 'Cormorant Garamond', serif;
+        color: #722f37;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+        overflow: hidden;
+        font-style: italic;
+        position: relative;
+    }
+    
+    /* Floating background hearts */
+    .bg-heart {
+        position: absolute;
+        color: rgba(255, 182, 193, 0.6);
+        font-size: 1.5rem;
+        animation: floatUp linear infinite;
+        z-index: 0;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    /* Main wrapper to hold arrows and container */
+    .main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 900px;
+        z-index: 10;
+        position: relative;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 650px;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 2px solid #f8b4b4;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(114, 47, 55, 0.15);
+        position: relative;
+        margin: 0 15px;
+    }
+    
+    /* Decorative inner border */
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 10px; left: 10px; right: 10px; bottom: 10px;
+        border: 1px dashed #f8b4b4;
+        border-radius: 15px;
+        pointer-events: none;
+    }
+
+    .hidden { display: none !important; }
+    
+    h1 {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.5rem;
+        margin-bottom: 10px;
+        color: #903a45;
+        font-style: normal;
+    }
+
+    .text-content {
+        font-size: 1.6rem;
+        line-height: 1.7;
+        min-height: 280px;
+        margin-bottom: 20px;
+        position: relative;
+        /* Smooth fade-in effect for the text */
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Open Letter Button Style */
+    .start-btn {
+        background-color: #903a45;
+        color: #fff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 1.3rem;
+        border-radius: 30px;
+        cursor: pointer;
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(144, 58, 69, 0.3);
+        position: relative;
+        z-index: 20;
+    }
+    .start-btn:hover { background-color: #722f37; transform: translateY(-2px); }
+
+    /* Navigation Arrows Outside the Box */
+    .nav-arrow {
+        background: transparent;
+        color: #903a45;
+        border: none;
+        font-size: 3.5rem;
+        cursor: pointer;
+        transition: 0.3s;
+        z-index: 20;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-arrow:hover {
+        color: #722f37;
+        transform: scale(1.15);
+    }
+    .nav-arrow:disabled {
+        color: rgba(144, 58, 69, 0.2);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .graphics { 
+        font-size: 2.5rem; 
+        margin-top: 15px; 
+        animation: gentleBounce 3s ease-in-out infinite; 
+    }
+    
+    .signature { 
+        font-family: 'Dancing Script', cursive;
+        font-size: 2.5rem; 
+        font-weight: 700; 
+        text-align: right; 
+        margin-top: 30px; 
+        color: #903a45;
+        font-style: normal;
+    }
+
+    @keyframes gentleBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+        .nav-arrow { font-size: 2.5rem; padding: 5px; }
+        .container { padding: 30px 20px; }
+        .text-content { font-size: 1.4rem; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Background Floating Hearts Container -->
+<div id="background-graphics"></div>
+
+<div id="start-screen" class="container">
+    <h1>A Letter For You</h1>
+    <div class="graphics">💌✨</div>
+    <br>
+    <button class="start-btn" onclick="startApp()">Open Letter</button>
+</div>
+
+<!-- Main wrapper holds the arrows and the letter box side-by-side -->
+<div id="letter-wrapper" class="main-wrapper hidden">
+    <button id="prev-btn" class="nav-arrow" onclick="prevSlide()">&#10094;</button>
+    
+    <div id="letter-screen" class="container">
+        <div id="text-display" class="text-content"></div>
+        <div id="graphics-display" class="graphics"></div>
+    </div>
+    
+    <button id="next-btn" class="nav-arrow" onclick="nextSlide()">&#10095;</button>
+</div>
+
+<audio id="bg-music" src="music.mp3"></audio>
+
+<script>
+    // Create floating hearts in the background
+    function createBackgroundHearts() {
+        const bg = document.getElementById('background-graphics');
+        const heartSymbols = ['🤍', '💖', '✨', '🌸', '🌹'];
+        for(let i = 0; i < 20; i++) {
+            let heart = document.createElement('div');
+            heart.className = 'bg-heart';
+            heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            heart.style.animationDelay = (Math.random() * 5) + 's';
+            heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            bg.appendChild(heart);
+        }
+    }
+    createBackgroundHearts();
+
+    const slides = [
+        { text: "Dear sunshine,\n\nThere’s something I’ve been realizing about you for a while, and I want you to understand what I mean because I’m not saying this to criticize you or tell you to change who you are.", graphic: "🌸✨" },
+        { text: "You’re someone who gives so much of yourself to the things and people you care about. When you love something, you put your whole heart into it. You work hard, you take responsibility, you go out of your way for people, and sometimes you keep giving even when you’re already tired. And honestly, that’s one of the things I admire and love most about you. So I never want you to stop doing that. If you love doing something, do it. If helping someone makes you happy, help them. If putting effort into something makes you feel fulfilled, give it everything. I don't want you to become less caring or less hardworking just because some people don't appreciate you.", graphic: "🌻💛" },
+        { text: "What I want you to change is something different.", graphic: "🍂" },
+        { text: "Sometimes I feel like you put so much effort into certain people because you want them to recognize it. You want them to see how much you've done, how much you've cared, how much you've sacrificed. And when they don't acknowledge it or show you the gratitude you deserve, it affects you so deeply. It ruins your mood, makes you angry, makes you sad, and you end up carrying that disappointment with you. And I hate seeing you hurt like that. Because the harsh truth is, not everyone is going to appreciate you. Most people think mostly about themselves. Some people will accept someone's kindness and effort as if they're entitled to it. You could give them everything you have and they might still not stop and say, “I really appreciate what you did for me.” And that's something I don't want you to keep fighting against. I want you to learn the difference between doing something because you genuinely want to do it and doing something because you're hoping that, eventually, someone will recognize your worth.", graphic: "🥀" },
+        { text: "The first one is beautiful. The second one is exhausting.\n\nAnd sometimes, while you're putting so much effort into people who don't really see you, you end up having less energy for the people who already do. I’m not blaming you for that either. I actually understand why it happens. You know that I love you. You know your parents love you. You know there are a handful of people who genuinely know you and appreciate you. So naturally, you don't feel like you have to constantly prove yourself to us. You know we're going to be there regardless.", graphic: "🪴🤍" },
+        { text: "But I don't want that security to mean that the people who love you get whatever energy is left after you've spent everything trying to earn appreciation from people who may never give it to you. You don't have to work harder for us to prove anything. We already know you.\n\nI know how much effort you put into things. I know how much you care. I notice the little things you do, even the things you think nobody notices. Your parents know you. The people who genuinely love you know you.", graphic: "🌿" },
+        { text: "And honestly, I think you're incredibly lucky to have people like that around you and I feel lucky that I get to be one of those people.\n\nBecause I’ve always looked at things differently. I’ve never really cared about getting recognition from everyone. If I do something, I do it because I want to, because I care about it, or because I love doing it. And if it's something where appreciation matters, I know that the people who matter to me will see it. I know you'll appreciate it. I know my parents will. And that has always been enough for me. The only person's opinion I've ever really cared about beyond my own is yours.", graphic: "🕊️❤️" },
+        { text: "And I want you to have that same peace.\n\nPlease don't let the people who don't appreciate you have so much control over your happiness.", graphic: "🤍✨" },
+        { text: "If you genuinely want to do something for them, do it. If it makes you happy, do it. If you don't mind that they may never thank you, then do it with your whole heart.\n\nBut if you're exhausting yourself because you're waiting for this time to finally be the time they recognize you, then please stop and ask yourself whether that recognition is really worth all the energy and pain you're putting into it.", graphic: "⚖️" },
+        { text: "Because your kindness isn't something people are entitled to. Your effort isn't something people automatically deserve. And your worth doesn't become smaller just because someone failed to recognize it. You don't have to prove yourself to everyone. You already have people who see you. You already have people who appreciate you. You already have people who genuinely love you—not because of what you do for them, but simply because you're you.", graphic: "💖" },
+        { text: "So please, keep being the girl who cares. Keep working hard. Keep putting your heart into things you genuinely love. I never want to take that beautiful part of you away. I just want you to be more careful about where you spend that beautiful energy. Give some of it to yourself. Give some of it to the people who genuinely love you. And if someone doesn't appreciate what you do, let them. Don't let their inability to see your value make you question your value. Because I see you.\n\nYou don't have to earn your worth from the rest of the world. We already know it.\n\nAnd I hope one day you can feel just as secure in your own worth as you should feel in the love we have for you. ❤️", graphic: "🌹" },
+        { text: "I loved you then, I love you now, I will always love you.\n\n<div class='signature'>- DUMMY</div>", graphic: "💖✨♾️🌹", isHtml: true }
+    ];
+
+    let currentSlide = 0;
+
+    function startApp() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('letter-wrapper').classList.remove('hidden');
+        
+        let audio = document.getElementById('bg-music');
+        audio.currentTime = 27; // Music will start exactly at 27 seconds
+        audio.play().catch(e => console.log("Audio autoplay prevented by browser"));
+
+        showSlide(currentSlide);
+    }
+
+    function showSlide(index) {
+        const slide = slides[index];
+        const textDisplay = document.getElementById('text-display');
+        const graphicsDisplay = document.getElementById('graphics-display');
+        
+        // Re-trigger the fade-in animation
+        textDisplay.style.animation = 'none';
+        textDisplay.offsetHeight; /* trigger reflow to restart animation */
+        textDisplay.style.animation = null; 
+
+        // Display text instantly instead of typing
+        textDisplay.innerHTML = slide.text.replace(/\n/g, "<br>");
+        graphicsDisplay.innerHTML = slide.graphic;
+        
+        // Disable prev/next buttons at the beginning/end
+        document.getElementById('prev-btn').disabled = (index === 0);
+        document.getElementById('next-btn').disabled = (index === slides.length - 1);
+    }
+
+    function nextSlide() {
+        if (currentSlide < slides.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+</script>
+</body>
+</html>
